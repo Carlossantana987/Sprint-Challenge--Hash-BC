@@ -27,6 +27,13 @@ def proof_of_work(last_proof):
     proof = 0
     #  TODO: Your code here
 
+    encoded_last_proof = f'{last_proof}'.encode()
+
+    last_proof = hashlib.sha256(encoded_last_proof).hexdigest()
+
+    while valid_proof(last_proof, proof) is False:
+        proof += 1
+
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
 
@@ -40,7 +47,18 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    pass
+
+    #returns utf-8 encoded version of the string. In case of failure, it raises a UnicodeDecodeError exception.
+    guess = f'{proof}'.encode()
+    last = f'{last_hash}'.encode()
+
+    guess_hash = hashlib.sha256(guess).hexdigest()
+    last_hash = hashlib.sha256(last).hexdigest()
+
+    return guess_hash[:6] == last_hash[-6:]
+
+
+
 
 
 if __name__ == '__main__':
