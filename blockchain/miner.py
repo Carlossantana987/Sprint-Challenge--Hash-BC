@@ -2,7 +2,7 @@ import hashlib
 import requests
 
 import sys
-
+import json
 from uuid import uuid4
 
 from timeit import default_timer as timer
@@ -27,11 +27,9 @@ def proof_of_work(last_proof):
     proof = 0
     #  TODO: Your code here
 
-    encoded_last_proof = f'{last_proof}'.encode()
+    block_string = json.dumps(last_proof, sort_keys=True).encode()
 
-    last_proof = hashlib.sha256(encoded_last_proof).hexdigest()
-
-    while valid_proof(last_proof, proof) is False:
+    while valid_proof(block_string, proof) is False:
         proof += 1
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
@@ -49,13 +47,11 @@ def valid_proof(last_hash, proof):
     # TODO: Your code here!
 
     #returns utf-8 encoded version of the string. In case of failure, it raises a UnicodeDecodeError exception.
-    guess = f'{proof}'.encode()
-    last = f'{last_hash}'.encode()
+    guess = f'{last_hash}{proof}'.encode()
 
     guess_hash = hashlib.sha256(guess).hexdigest()
-    last_hash = hashlib.sha256(last).hexdigest()
 
-    return guess_hash[:6] == last_hash[-6:]
+    return   guess_hash[:6] == last_hash[-6:]
 
 
 
