@@ -82,7 +82,7 @@ def hash_table_remove(hash_table, key):
 
 # Should return None if the key is not found.
 # '''
-def hash_table_retrieve(hash_table, key):
+def hash_table_retrieve(hash_table, key=None):
     index = hash(key, len(hash_table.storage))
 
     current_pair = hash_table.storage[index]
